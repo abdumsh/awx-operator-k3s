@@ -3,6 +3,7 @@ K3S_OPTIONS := --write-kubeconfig-mode 644
 AWX_HOST := awx.awx-operator.com
 POSTGRES_DIR := /data/postgres-15
 PROJECTS_DIR := /data/projects
+NAMESPACE := awx
 
 # Default target
 .PHONY: all
