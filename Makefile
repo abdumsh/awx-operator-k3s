@@ -7,7 +7,12 @@ NAMESPACE := awx
 
 # Default target
 .PHONY: all
-all: install_k3s clone_awx_operator setup_directories generate_cert replace_ingress_host deploy_awx_operator deploy_awx show_logs
+all: update_upgrade install_k3s clone_awx_operator setup_directories generate_cert replace_ingress_host deploy_awx_operator deploy_awx show_logs
+
+# Update and upgrade the server
+.PHONY: update_upgrade
+update_upgrade:
+	sudo apt-get update && sudo apt-get upgrade -y
 
 # Install K3s
 .PHONY: install_k3s
