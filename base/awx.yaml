@@ -13,7 +13,7 @@ spec:
 
   ingress_type: ingress
   ingress_hosts:
-    - hostname: awx.awx-operator.com
+    - hostname: ${AWX_HOST}
       tls_secret: awx-secret-tls
 
   postgres_configuration_secret: awx-postgres-configuration
