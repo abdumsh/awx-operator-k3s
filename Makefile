@@ -12,7 +12,7 @@ all: update_upgrade install_k3s clone_awx_operator setup_directories generate_ce
 # Update and upgrade the server
 .PHONY: update_upgrade
 update_upgrade:
-	sudo apt-get update && sudo apt-get upgrade -y
+	sudo apt-get update && sudo apt-get upgrade -y || { echo 'Update failed'; exit 1; }
 
 # Install K3s
 .PHONY: install_k3s
@@ -59,3 +59,25 @@ show_logs:
 .PHONY: show_resources
 show_resources:
 	kubectl -n $(NAMESPACE) get awx,all,ingress,secrets
+
+# Help target
+.PHONY: help
+help:
+	@echo "Usage:"
+	@echo "  make all               - Run all steps"
+	@echo "  make update_upgrade    - Update and upgrade the server"
+	@echo "  make install_k3s      - Install K3s"
+	@echo "  make clone_awx_operator- Clone AWX Operator repository"
+	@echo "  make replace_ingress_host - Replace AWX host in the YAML file"
+	@echo "  make deploy_awx_operator - Deploy the AWX Operator"
+	@echo "  make generate_cert     - Generate SSL certificate for AWX Ingress"
+	@echo "  make setup_directories  - Create Postgres and Projects directories"
+	@echo "  make deploy_awx        - Deploy AWX"
+	@echo "  make show_logs         - Show AWX Operator logs"
+	@echo "  make show_resources    - Display AWX resources"
+
+# Cleanup target
+.PHONY: cleanup
+cleanup:
+	kubectl delete -k ~/awx-operator-k3s/operator -n $(NAMESPACE) || echo 'No resources to clean up'
+	kubectl delete -f ~/awx-operator-k3s/base/awx-deployed.yaml -n $(NAMESPACE) || echo 'No resources to clean up'
