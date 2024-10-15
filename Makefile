@@ -28,7 +28,7 @@ replace_ingress_host:
 # Deploy AWX Operator
 .PHONY: deploy_awx_operator
 deploy_awx_operator:
-	kubectl apply -k ~/awx-operator-k3s/operator
+	kubectl apply -k ~/awx-operator-k3s/operator -n $(NAMESPACE)
 
 # Generate SSL certificate for AWX Ingress
 .PHONY: generate_cert
@@ -38,20 +38,19 @@ generate_cert:
 # Create Postgres and Projects directories with permissions
 .PHONY: setup_directories
 setup_directories:
-	sudo mkdir -p $(POSTGRES_DIR) $(PROJECTS_DIR)
-	sudo chown 1000:0 $(PROJECTS_DIR)
+	sudo mkdir -p $(POSTGRES_DIR) $(PROJECTS_DIR) && sudo chown 1000:0 $(PROJECTS_DIR)
 
 # Deploy AWX
 .PHONY: deploy_awx
 deploy_awx:
-	kubectl apply -f ~/awx-operator-k3s/base/awx-deployed.yaml
+	kubectl apply -f ~/awx-operator-k3s/base/awx-deployed.yaml -n $(NAMESPACE)
 
 # Display AWX Operator Logs
 .PHONY: show_logs
 show_logs:
-	kubectl -n awx logs -f deployments/awx-operator-controller-manager
+	kubectl -n $(NAMESPACE) logs -f deployments/awx-operator-controller-manager
 
 # Display AWX Resources
 .PHONY: show_resources
 show_resources:
-	kubectl -n awx get awx,all,ingress,secrets
+	kubectl -n $(NAMESPACE) get awx,all,ingress,secrets
