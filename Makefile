@@ -24,11 +24,11 @@ install_k3s:
 clone_awx_operator:
 	git clone https://github.com/abdumsh/awx-operator-k3s.git ~/awx-operator-k3s
 
-# Replace Ingress Host in AWX YAML
+# Replace Ingress Host and Namespace in AWX YAML
 .PHONY: replace_ingress_host
 replace_ingress_host:
-	@echo "Replacing AWX host in base/awx.yaml..."
-	envsubst < ~/awx-operator-k3s/base/awx.yaml > ~/awx-operator-k3s/base/awx-deployed.yaml
+	@echo "Replacing AWX host and namespace in base/awx.yaml..."
+	envsubst < ~/awx-operator-k3s/base/awx.yaml | sed "s/namespace: .*/namespace: $(NAMESPACE)/" > ~/awx-operator-k3s/base/awx-deployed.yaml
 
 # Deploy AWX Operator
 .PHONY: deploy_awx_operator
@@ -68,7 +68,7 @@ help:
 	@echo "  make update_upgrade    - Update and upgrade the server"
 	@echo "  make install_k3s      - Install K3s"
 	@echo "  make clone_awx_operator- Clone AWX Operator repository"
-	@echo "  make replace_ingress_host - Replace AWX host in the YAML file"
+	@echo "  make replace_ingress_host - Replace AWX host and namespace in the YAML file"
 	@echo "  make deploy_awx_operator - Deploy the AWX Operator"
 	@echo "  make generate_cert     - Generate SSL certificate for AWX Ingress"
 	@echo "  make setup_directories  - Create Postgres and Projects directories"
