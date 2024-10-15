@@ -2,7 +2,7 @@
 apiVersion: awx.ansible.com/v1beta1
 kind: AWX
 metadata:
-  name: ${NAMESPACE}
+  name: awx
 spec:
   # These parameters are designed for use with:
   # - AWX Operator: 2.19.1
